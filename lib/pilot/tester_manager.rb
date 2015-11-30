@@ -52,14 +52,16 @@ module Pilot
     def remove_tester(options)
       start(options)
 
-      tester = Spaceship::Tunes::Tester::External.find(config[:email])
-      tester ||= Spaceship::Tunes::Tester::Internal.find(config[:email])
+      config[:email].split(" ").each do |email|
+        tester = Spaceship::Tunes::Tester::External.find(email)
+        tester ||= Spaceship::Tunes::Tester::Internal.find(email)
 
-      if tester
-        tester.delete!
-        Helper.log.info "Successully removed tester #{tester.email}".green
-      else
-        Helper.log.error "Tester not found: #{config[:email]}".red
+        if tester
+          tester.delete!
+          Helper.log.info "Successully removed tester #{tester.email}".green
+        else
+          Helper.log.error "Tester not found: #{email}".red
+        end
       end
     end
 
